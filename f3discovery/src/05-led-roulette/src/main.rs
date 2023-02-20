@@ -7,14 +7,17 @@ use aux5::{entry, Delay, DelayMs, LedArray, OutputSwitch};
 #[entry]
 fn main() -> ! {
     let (mut delay, mut leds): (Delay, LedArray) = aux5::init();
-
-    let half_period = 500_u16;
+    let led_count = leds.len();
+    let half_period = 100_u16;
 
     loop {
-        leds[0].on().ok();
-        delay.delay_ms(half_period);
+        for i in 0..led_count {
+            let next = (i + 1) % led_count;
 
-        leds[0].off().ok();
-        delay.delay_ms(half_period);
+            leds[next].on().ok();
+            delay.delay_ms(half_period);
+            leds[i].off().ok();
+            delay.delay_ms(half_period);
+        }
     }
 }
